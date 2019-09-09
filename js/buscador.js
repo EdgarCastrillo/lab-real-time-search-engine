@@ -201,16 +201,28 @@ transmission.addEventListener('input', e => {
     filterAuto()
 })
 
+const color = document.querySelector('#color')
+color.addEventListener('input', e => {
+    dataSearch.color = e.target.value
+    // Call Auto filter function
+    filterAuto()
+})
 
-
-function showAutos(autos) {
+function cleanHTML() {
     // Read result
     const container = document.querySelector('#result')
-
     // Clean last results
     while(container.firstChild) {
         container.removeChild(container.firstChild)
     }
+}
+
+
+function showAutos(autos) {
+    cleanHTML()
+    
+    // Read result
+    const container = document.querySelector('#result')
 
     // Create HTMl for autos
     autos.forEach((auto) => {
@@ -222,15 +234,26 @@ function showAutos(autos) {
     });
 }
 
+function noResult() {
+    cleanHTML()
+
+    const noResult = document.createElement('div')
+    noResult.classList.add('alert', 'error')
+    noResult.appendChild(document.createTextNode('No hay resultados'))
+    document.querySelector('#result').appendChild(noResult)
+}
+
+
 
 function filterAuto() {
-    const result = getAutos().filter(filterBrand).filter(filterYear).filter(filterMin).filter(filterMax).filter(filterDoors).filter(filterTransmission)
+    const result = getAutos().filter(filterBrand).filter(filterYear).filter(filterMin).filter(filterMax).filter(filterDoors).filter(filterTransmission).filter(filterColor)
     if(result.length) {
         showAutos(result)
     } else {
-        alert('No hay resultados')
+        noResult()
     }
 }
+
 
 function filterBrand(auto) {
     if(dataSearch.brand) {
@@ -275,6 +298,14 @@ function filterDoors(auto) {
 function filterTransmission(auto) {
     if(dataSearch.transmission) {
         return auto.transmission = dataSearch.transmission
+    }  else {
+        return auto
+    }
+}
+
+function filterColor(auto) {
+    if(dataSearch.color) {
+        return auto.color = dataSearch.color
     }  else {
         return auto
     }
