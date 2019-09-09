@@ -187,6 +187,20 @@ maximum.addEventListener('input', e => {
     filterAuto()
 })
 
+const doors = document.querySelector('#doors')
+doors.addEventListener('input', e => {
+    dataSearch.doors = Number(e.target.value)
+    // Call Auto filter function
+    filterAuto()
+})
+
+const transmission = document.querySelector('#transmission')
+transmission.addEventListener('input', e => {
+    dataSearch.transmission = e.target.value
+    // Call Auto filter function
+    filterAuto()
+})
+
 
 
 function showAutos(autos) {
@@ -210,7 +224,7 @@ function showAutos(autos) {
 
 
 function filterAuto() {
-    const result = getAutos().filter(filterBrand).filter(filterYear).filter(filterMin).filter(filterMax)
+    const result = getAutos().filter(filterBrand).filter(filterYear).filter(filterMin).filter(filterMax).filter(filterDoors).filter(filterTransmission)
     if(result.length) {
         showAutos(result)
     } else {
@@ -245,6 +259,22 @@ function filterMin(auto) {
 function filterMax(auto) {
     if(dataSearch.maximum) {
         return auto.price <= dataSearch.maximum
+    }  else {
+        return auto
+    }
+}
+
+function filterDoors(auto) {
+    if(dataSearch.doors) {
+        return auto.doors = dataSearch.doors
+    }  else {
+        return auto
+    }
+}
+
+function filterTransmission(auto) {
+    if(dataSearch.transmission) {
+        return auto.transmission = dataSearch.transmission
     }  else {
         return auto
     }
