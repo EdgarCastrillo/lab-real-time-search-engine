@@ -143,8 +143,8 @@ function getAutos() {
 let dataSearch = {
     brand: '',
     year: '',
-    min: '',
-    max: '',
+    minimum: '',
+    maximum: '',
     doors: '',
     transmission: '',
     color: ''
@@ -153,7 +153,6 @@ let dataSearch = {
 
 // Event listener DOM Loaded
 const autos = getAutos()
-
 document.addEventListener('DOMContentLoaded', () => {
     showAutos(autos)
 })
@@ -163,16 +162,43 @@ document.addEventListener('DOMContentLoaded', () => {
 const brand = document.querySelector('#brand')
 brand.addEventListener('input', e => {
     dataSearch.brand = e.target.value
+    // Call Auto filter function
+    filterAuto()
+})
 
-    // Auto filter
+const year = document.querySelector('#year')
+year.addEventListener('input', e => {
+    dataSearch.year = Number(e.target.value)
+    // Call Auto filter function
+    filterAuto()
+})
+
+const minimum = document.querySelector('#min')
+minimum.addEventListener('input', e => {
+    dataSearch.minimum = Number(e.target.value)
+    // Call Auto filter function
+    filterAuto()
+})
+
+const maximum = document.querySelector('#max')
+maximum.addEventListener('input', e => {
+    dataSearch.maximum = Number(e.target.value)
+    // Call Auto filter function
     filterAuto()
 })
 
 
-function showAutos(autos) {
 
+function showAutos(autos) {
     // Read result
     const container = document.querySelector('#result')
+
+    // Clean last results
+    while(container.firstChild) {
+        container.removeChild(container.firstChild)
+    }
+
+    // Create HTMl for autos
     autos.forEach((auto) => {
         const autoHTML = document.createElement('p')
         autoHTML.innerHTML = `
@@ -184,14 +210,42 @@ function showAutos(autos) {
 
 
 function filterAuto() {
-    const result = getAutos().filter(filterBrand)
-    console.log(result)
+    const result = getAutos().filter(filterBrand).filter(filterYear).filter(filterMin).filter(filterMax)
+    if(result.length) {
+        showAutos(result)
+    } else {
+        alert('No hay resultados')
+    }
 }
 
 function filterBrand(auto) {
     if(dataSearch.brand) {
         return auto.brand === dataSearch.brand
     }  else {
+        return auto
+    }
+}
 
+function filterYear(auto) {
+    if(dataSearch.year) {
+        return auto.year === dataSearch.year
+    }  else {
+        return auto
+    }
+}
+
+function filterMin(auto) {
+    if(dataSearch.minimum) {
+        return auto.price >= dataSearch.minimum
+    }  else {
+        return auto
+    }
+}
+
+function filterMax(auto) {
+    if(dataSearch.maximum) {
+        return auto.price <= dataSearch.maximum
+    }  else {
+        return auto
     }
 }
